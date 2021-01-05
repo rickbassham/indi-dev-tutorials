@@ -2,6 +2,9 @@
 
 ## Project Setup
 
+First things first, there is nothing special you need to develop for INDI. You can use any
+IDE, or none at all. You only need basic standard tools for C++ development.
+
 ### Dependencies
 
 This will install the minimum dependencies for driver development. You may need

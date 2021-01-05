@@ -1,12 +1,12 @@
 # INDI Driver Development
 
 * [Full Example](https://github.com/rickbassham/indi-dev-tutorials/tree/main/drivers/indi_mycustomdriver)
-* [Project Setup](drivers/00-project-setup.md)
-* [Simple Driver](drivers/01-simple.md)
-* [Properties](drivers/02-properties.md)
-* [Serial Connection](drivers/03-serialconnection.md)
-* [Driver Loop](drivers/04-loops.md)
-* [Helpful Functions](drivers/05-helpful-functions.md)
+* [Project Setup](00-project-setup.md)
+* [Simple Driver](01-simple.md)
+* [Properties](02-properties.md)
+* [Serial Connection](03-serialconnection.md)
+* [Driver Loop](04-loops.md)
+* [Helpful Functions](05-helpful-functions.md)
 
 ## Helpful Functions
 

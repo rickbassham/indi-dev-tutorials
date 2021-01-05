@@ -288,7 +288,7 @@ bool MyCustomDriver::ISNewText(const char *dev, const char *name, char *texts[],
 
 Now when we run the driver, we can change what we say when the button is clicked!
 
-But evertime we restart the driver, we go back to the default of `Hello, world!`.
+But every time we restart the driver, we go back to the default of `Hello, world!`.
 Can we remember these between sessions? Yes we can!
 
 This part's easy. We just need to override `saveConfigItems` to tell it what to save.

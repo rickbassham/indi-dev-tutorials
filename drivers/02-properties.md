@@ -382,6 +382,8 @@ And we need to handle the multiple switches in `ISNewSwitch`.
         }
 ```
 
+Now we can click either button, and either get `Hello, world!` or our custom text. Hooray!
+
 But every time we restart the driver, we go back to the default of `Hello, world!`.
 Can we remember these between sessions? Yes we can!
 

@@ -93,7 +93,7 @@ bool MyCustomDriver::initProperties()
 
     IUFillText(&WhatToSayT[0], "WHAT_TO_SAY", "What to say?", "Hello, world!");
     IUFillTextVector(&WhatToSayTP, WhatToSayT, 1, getDeviceName(), "WHAT_TO_SAY", "Got something to say?", MAIN_CONTROL_TAB, IP_RW, 60, IPS_IDLE);
-    // defineText(&WhatToSayTP);
+    // defineText(&WhatToSayTP); // we moved this to updateProperties below
 
     addAuxControls();
 
@@ -135,6 +135,17 @@ bool MyCustomDriver::updateProperties()
 bool MyCustomDriver::ISNewSwitch(const char *dev, const char *name, ISState *states, char *names[],
                                  int n)
 {
+    // All of the ISNew* methods should return true if the property update was handled,
+    // otherwise false. The return value is NOT an indication of success, but rather
+    // that the property belonged to the device.
+    // So we can either write our methods to check base classes first, like this...
+
+    if (INDI::DefaultDevice::ISNewSwitch(dev, name, states, names, n))
+    {
+        // Looks like DefaultDevice handled this, so we don't need to worry with it.
+        return true;
+    }
+
     // Make sure it is for us.
     if (dev != nullptr && strcmp(dev, getDeviceName()) == 0)
     {
@@ -168,8 +179,7 @@ bool MyCustomDriver::ISNewSwitch(const char *dev, const char *name, ISState *sta
         }
     }
 
-    // Nobody has claimed this, so let the parent handle it
-    return INDI::DefaultDevice::ISNewSwitch(dev, name, states, names, n);
+    return false;
 }
 
 bool MyCustomDriver::ISNewText(const char *dev, const char *name, char *texts[], char *names[], int n)
@@ -183,12 +193,23 @@ bool MyCustomDriver::ISNewText(const char *dev, const char *name, char *texts[],
             // This is a helper method to just update the values
             // on the property.
             IUUpdateText(&WhatToSayTP, texts, names, n);
+
+            // And tell the client they were updated.
             IDSetText(&WhatToSayTP, nullptr);
+
+            // This is a really important value, so make sure we save it every time
+            // the user sets it. Don't wait for the user to click the save
+            // button in options...
+            // You probably don't want to do this for all your properties, but
+            // you might for some.
+            saveConfig(true, WhatToSayTP.name);
+
             return true;
         }
     }
 
-    // Nobody has claimed this, so let the parent handle it
+    // ...or pass it down if we don't handle it.
+    // Nobody has claimed this, so let the parent handle it.
     return INDI::DefaultDevice::ISNewText(dev, name, texts, names, n);
 }
 

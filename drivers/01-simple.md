@@ -7,6 +7,9 @@
 * [Serial Connection](03-serialconnection.md)
 * [Driver Loop](04-loops.md)
 * [Helpful Functions](05-helpful-functions.md)
+* [Driver Interface](06-driver-interface.md)
+* [Guider](07-guider.md)
+* [Focuser](08-focuser.md)
 
 This tutorial assumes you have setup your project structure to match [project-setup](00-project-setup.md).
 

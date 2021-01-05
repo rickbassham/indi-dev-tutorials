@@ -7,6 +7,9 @@
 * [Serial Connection](03-serialconnection.md)
 * [Driver Loop](04-loops.md)
 * [Helpful Functions](05-helpful-functions.md)
+* [Driver Interface](06-driver-interface.md)
+* [Guider](07-guider.md)
+* [Focuser](08-focuser.md)
 
 ## Device Properties (Theory)
 
@@ -194,6 +197,10 @@ bool MyCustomDriver::initProperties()
 
     // now we register the property with the DefaultDevice
     // without this, the property won't show up on the control panel
+    // NOTE: you don't have to call defineSwitch here. You can call it at
+    // any time. Maybe you don't want it to show until you are connected, or
+    // until the user does something else? Maybe you want to connect, query your
+    // device, then call this. It's up to you.
     defineSwitch(&SayHelloSP);
 
     return true;

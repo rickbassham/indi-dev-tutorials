@@ -7,6 +7,9 @@
 * [Serial Connection](03-serialconnection.md)
 * [Driver Loop](04-loops.md)
 * [Helpful Functions](05-helpful-functions.md)
+* [Driver Interface](06-driver-interface.md)
+* [Guider](07-guider.md)
+* [Focuser](08-focuser.md)
 
 ## Serial Connections
 
@@ -128,6 +131,10 @@ If you have properties that you want defined only when you are connected, you'll
 need to override another method, `updateProperties`.
 
 We'll move our `define*` calls out of `initProperties` and into here.
+
+Remember, you can call `define*` any time, not just in `initProperties` or
+`updateProperties`. You could query the capabilities of your device first,
+or call it in response to user interaction.
 
 ```cpp
 bool MyCustomDriver::updateProperties()

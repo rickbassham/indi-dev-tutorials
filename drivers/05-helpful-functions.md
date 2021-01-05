@@ -7,12 +7,17 @@
 * [Serial Connection](03-serialconnection.md)
 * [Driver Loop](04-loops.md)
 * [Helpful Functions](05-helpful-functions.md)
+* [Driver Interface](06-driver-interface.md)
+* [Guider](07-guider.md)
+* [Focuser](08-focuser.md)
 
 ## Helpful Functions
 
 ### class DefaultDevice
 
 #### Adding common controls to your driver.
+
+These would be called in `initProperties`.
 
 * `addDebugControl`
 * `addSimulationControl`
@@ -37,7 +42,8 @@
 #### Driver Interface
 
 * `setDriverInterface`
-    * Used to tell the client what base classes we implement.
+    * Used to tell the client what base classes we implement. Usually called in
+    `initProperties`.
 
 #### Saving Configuration
 
@@ -45,13 +51,22 @@
     * Used to save your properties when the `Save` button is pushed.
     * You will typically call `IUSaveConfig*` for each property you want to save.
     * Be sure to call the base class's method if you override this.
+* `saveConfig(bool silent = false, const char *property = nullptr)`
+    * Used to save a single (or all) property.
+    * Can be used to silently save a property when it is set, so you don't need
+    to rely on the user clicking the "Save" button in "Options".
 
 #### Communication
 
 * `registerConnection`
     * Registers a new `Connection::Interface` with the driver.
 * `getActiveConnection`
-    * Get the active `Connection::Interface`.
+    * Get the active `Connection::Interface`. Most base classes that implement
+    connections will call this for you, and set the value of a `PortFD` file
+    descriptor.
+* `setSupportedConnections`
+    * Most device base classes have this method, and it allows you to define
+    whether you can connect via serial, tcp, usb, custom, or any combination.
 
 ### <libindi/indicom.h>
 

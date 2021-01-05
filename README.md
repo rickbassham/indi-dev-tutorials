@@ -10,3 +10,6 @@ Some simple tutorials to get you started developing in [INDI](https://indilib.or
     * [Serial Connection](drivers/03-serialconnection.md)
     * [Driver Loop](drivers/04-loops.md)
     * [Helpful Functions](drivers/05-helpful-functions.md)
+    * [Driver Interface](drivers/06-driver-interface.md)
+    * [Guider](drivers/07-guider.md)
+    * [Focuser](drivers/08-focuser.md)

@@ -30,7 +30,17 @@ protected:
     virtual bool saveConfigItems(FILE *fp) override;
 
 private:
-    ISwitch SayHelloS[1];
+    // Use the inherent autoincrementing of an enum to generate our indexes.
+    // This makes keeping track of multiple values on a property MUCH easier
+    // than remembering indexes throughout your code.
+    // The last value _N is used as the total count.
+    enum
+    {
+        SAY_HELLO_DEFAULT,
+        SAY_HELLO_CUSTOM,
+        SAY_HELLO_N,
+    };
+    ISwitch SayHelloS[SAY_HELLO_N];
     ISwitchVectorProperty SayHelloSP;
 
     IText WhatToSayT[1];

@@ -60,16 +60,22 @@ bool MyCustomDriver::initProperties()
     INDI::DefaultDevice::initProperties();
 
     IUFillSwitch(
-        &SayHelloS[0], // A reference to the switch VALUE
-        "SAY_HELLO",   // The name of the VALUE
-        "Say Hello",   // The label of the VALUE
-        ISS_OFF        // The switch state
+        &SayHelloS[SAY_HELLO_DEFAULT], // A reference to the switch VALUE
+        "SAY_HELLO_DEFAULT",           // The name of the VALUE
+        "Say Hello",                   // The label of the VALUE
+        ISS_OFF                        // The switch state
+    );
+    IUFillSwitch(
+        &SayHelloS[SAY_HELLO_CUSTOM], // A reference to the switch VALUE
+        "SAY_HELLO_CUSTOM",           // The name of the VALUE
+        "Say Custom",                 // The label of the VALUE
+        ISS_OFF                       // The switch state
     );
 
     IUFillSwitchVector(
         &SayHelloSP,      // A reference to the switch PROPERTY
         SayHelloS,        // The list of switch values on this PROPERTY
-        1,                // How many switch values are there?
+        SAY_HELLO_N,      // How many switch values are there?
         getDeviceName(),  // The name of the device
         "SAY_HELLO",      // The name of the PROPERTY
         "Hello Commands", // The label of the PROPERTY
@@ -134,10 +140,23 @@ bool MyCustomDriver::ISNewSwitch(const char *dev, const char *name, ISState *sta
     {
         if (strcmp(name, SayHelloSP.name) == 0)
         {
-            LOG_INFO(WhatToSayT[0].text);
+            // Accept what we received.
+            IUUpdateSwitch(&SayHelloSP, states, names, n);
 
-            // Turn the switch back off
-            SayHelloS[0].s = ISS_OFF;
+            // Find out what switch was clicked.
+            int index = IUFindOnSwitchIndex(&SayHelloSP);
+            switch (index)
+            {
+            case SAY_HELLO_DEFAULT:
+                LOG_INFO("Hello, world!");
+                break;
+            case SAY_HELLO_CUSTOM:
+                LOG_INFO(WhatToSayT[0].text);
+                break;
+            }
+
+            // Turn all switches back off.
+            IUResetSwitch(&SayHelloSP);
 
             // Set the property state back to idle
             SayHelloSP.s = IPS_IDLE;

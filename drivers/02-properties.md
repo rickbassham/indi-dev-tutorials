@@ -157,8 +157,8 @@ public:
     virtual bool initProperties() override;
 
 private:
-    ISwitch SayHelloS[1];
-    ISwitchVectorProperty SayHelloSP;
+    ISwitch SayHelloS[1]; // This is our array of values for the property.
+    ISwitchVectorProperty SayHelloSP; // This is the actual property vector.
 ```
 
 Now our class has a way to store it, but we need to tell INDI about it, so we move over to our `cpp` file.
@@ -295,6 +295,92 @@ bool MyCustomDriver::ISNewText(const char *dev, const char *name, char *texts[],
 ```
 
 Now when we run the driver, we can change what we say when the button is clicked!
+
+But what if we want to have multiple switch values on a property?
+
+Let's have both a `Say Hello` and `Say Custom` button.
+
+```cpp
+    // Use the inherent autoincrementing of an enum to generate our indexes.
+    // This makes keeping track of multiple values on a property MUCH easier
+    // than remembering indexes throughout your code.
+    // The last value _N is used as the total count.
+    enum
+    {
+        SAY_HELLO_DEFAULT,
+        SAY_HELLO_CUSTOM,
+        SAY_HELLO_N,
+    };
+    ISwitch SayHelloS[SAY_HELLO_N];
+    ISwitchVectorProperty SayHelloSP;
+```
+
+So, now `SayHelloS` is an array with 2 values, instead of the 1 value we had before.
+But we need to update `initProperties` to define the new switch value.
+
+```cpp
+    IUFillSwitch(
+        &SayHelloS[SAY_HELLO_DEFAULT], // A reference to the switch VALUE
+        "SAY_HELLO_DEFAULT",           // The name of the VALUE
+        "Say Hello",                   // The label of the VALUE
+        ISS_OFF                        // The switch state
+    );
+    IUFillSwitch(
+        &SayHelloS[SAY_HELLO_CUSTOM], // A reference to the switch VALUE
+        "SAY_HELLO_CUSTOM",           // The name of the VALUE
+        "Say Custom",                 // The label of the VALUE
+        ISS_OFF                       // The switch state
+    );
+
+    IUFillSwitchVector(
+        &SayHelloSP,      // A reference to the switch PROPERTY
+        SayHelloS,        // The list of switch values on this PROPERTY
+        SAY_HELLO_N,      // How many switch values are there?
+        getDeviceName(),  // The name of the device
+        "SAY_HELLO",      // The name of the PROPERTY
+        "Hello Commands", // The label of the PROPERTY
+        MAIN_CONTROL_TAB, // What tab should we be on?
+        IP_RW,            // Let's make it read/write.
+        ISR_ATMOST1,      // At most 1 can be on
+        60,               // With a timeout of 60 seconds
+        IPS_IDLE          // and an initial state of idle.
+    );
+```
+
+If you'll notice, we are using the enum values here so we don't have to remember indexes.
+
+And we need to handle the multiple switches in `ISNewSwitch`.
+
+```cpp
+        if (strcmp(name, SayHelloSP.name) == 0)
+        {
+            // Accept what we received.
+            IUUpdateSwitch(&SayHelloSP, states, names, n);
+
+            // Find out what switch was clicked.
+            int index = IUFindOnSwitchIndex(&SayHelloSP);
+            switch (index)
+            {
+            case SAY_HELLO_DEFAULT: // see how much better this is than direct indexes? USE AN ENUM!
+                LOG_INFO("Hello, world!");
+                break;
+            case SAY_HELLO_CUSTOM:
+                LOG_INFO(WhatToSayT[0].text);
+                break;
+            }
+
+            // Turn all switches back off.
+            IUResetSwitch(&SayHelloSP);
+
+            // Set the property state back to idle
+            SayHelloSP.s = IPS_IDLE;
+
+            // And actually inform INDI of those two operations
+            IDSetSwitch(&SayHelloSP, nullptr);
+
+            return true;
+        }
+```
 
 But every time we restart the driver, we go back to the default of `Hello, world!`.
 Can we remember these between sessions? Yes we can!

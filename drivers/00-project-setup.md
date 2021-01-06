@@ -137,7 +137,7 @@ be named to match your executable name.
 
 `device -> label` is a friendly name for your device.
 
-`driver -> name` is a friendl name for your driver.
+`driver -> name` is a friendly name for your driver.
 
 The text content of the `driver` tag must match the executable for your driver.
 

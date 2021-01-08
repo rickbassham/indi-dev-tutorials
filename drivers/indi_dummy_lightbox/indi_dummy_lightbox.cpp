@@ -66,6 +66,8 @@ bool DummyLightbox::initProperties()
     // Add debug/simulation/etc controls to the driver.
     addAuxControls();
 
+    setDriverInterface(LIGHTBOX_INTERFACE | AUX_INTERFACE);
+
     serialConnection = new Connection::Serial(this);
     serialConnection->registerHandshake([&]() { return Handshake(); });
     serialConnection->setDefaultBaudRate(Connection::Serial::B_57600);

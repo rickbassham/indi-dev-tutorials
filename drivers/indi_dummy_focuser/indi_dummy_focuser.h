@@ -2,11 +2,6 @@
 
 #include <libindi/indifocuser.h>
 
-namespace Connection
-{
-    class Serial;
-}
-
 class DummyFocuser : public INDI::Focuser
 {
 public:

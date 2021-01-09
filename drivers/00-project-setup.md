@@ -50,7 +50,7 @@ The files in `cmake_modules` can be copied from the [libindi repo](https://githu
 
 Additional information about CMake can be found with [their tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html).
 
-Here's an exmaple file for our new driver.
+Here's an example file for our new driver.
 
 ```cmake
 # define the project name

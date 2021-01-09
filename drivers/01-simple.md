@@ -95,7 +95,7 @@ First create a `build` folder in your project's folder, move into it and configu
 ```bash
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ../
 ```
 
 If you look in the build folder, you should now see the `config.h` and `indi_mycustomdriver.xml` files

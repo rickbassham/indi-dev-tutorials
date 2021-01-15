@@ -40,10 +40,10 @@ private:
         SAY_HELLO_CUSTOM,
         SAY_HELLO_N,
     };
-    ISwitch SayHelloS[SAY_HELLO_N];
+    ISwitch SayHelloS[SAY_HELLO_N]{};
     ISwitchVectorProperty SayHelloSP;
 
-    IText WhatToSayT[1];
+    IText WhatToSayT[1]{};
     ITextVectorProperty WhatToSayTP;
 
 private: // serial connection

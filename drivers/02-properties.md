@@ -160,7 +160,7 @@ public:
     virtual bool initProperties() override;
 
 private:
-    ISwitch SayHelloS[1]; // This is our array of values for the property.
+    ISwitch SayHelloS[1] {}; // This is our array of values for the property.
     ISwitchVectorProperty SayHelloSP; // This is the actual property vector.
 ```
 
@@ -257,7 +257,7 @@ public:
     virtual bool ISNewText(const char *dev, const char *name, char *texts[], char *names[],
                            int n) override;
 private:
-    IText WhatToSayT[1];
+    IText WhatToSayT[1] {};
     ITextVectorProperty WhatToSayTP;
 ```
 
@@ -318,7 +318,7 @@ Let's have both a `Say Hello` and `Say Custom` button.
         SAY_HELLO_CUSTOM,
         SAY_HELLO_N,
     };
-    ISwitch SayHelloS[SAY_HELLO_N];
+    ISwitch SayHelloS[SAY_HELLO_N] {};
     ISwitchVectorProperty SayHelloSP;
 ```
 

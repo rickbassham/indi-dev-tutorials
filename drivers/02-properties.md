@@ -10,6 +10,7 @@
 * [Driver Interface](06-driver-interface.md)
 * [Guider](07-guider.md)
 * [Focuser](08-focuser.md)
+* [Coming From ASCOM](09-coming-from-ascom.md)
 
 ## Device Properties (Theory)
 
@@ -423,6 +424,96 @@ void MyCustomDriver::ISGetProperties(const char *dev)
     loadConfig(true, WhatToSayTP.name);
 }
 ```
+
+So we've handled getting user input from the client into the driver, but how does
+the driver inform the client about updates?
+
+To illustrate this, lets add a new "Say Count" property to our driver.
+
+```cpp
+// header file
+    INumber SayCountN[1]{};
+    INumberVectorProperty SayCountNP;
+```
+
+```cpp
+bool MyCustomDriver::initProperties()
+{
+    ...
+    // and now let's add a counter of how many times the user clicks the button
+    IUFillNumber(&SayCountN[0], // First number VALUE in the property (and the only one)
+                 "SAY_COUNT",   // name of the VALUE
+                 "Count",       // label of the VALUE
+                 "%0.f",        // format specifier to show the value to the user; this should be a format specifier for a double
+                 0,             // minimum value; used by the client to render the UI
+                 0,             // maximum value; used by the client to render the UI
+                 0,             // step value; used by the client to render the UI
+                 0);            // current value
+
+    IUFillNumberVector(&SayCountNP,      // reference to the number PROPERTY
+                       SayCountN,        // Array of number values
+                       1,                // count of number values in the array
+                       getDeviceName(),  // device name
+                       "SAY_COUNT",      // PROPERTY name
+                       "Say Count",      // PROPERTY label
+                       MAIN_CONTROL_TAB, // What tab should we be on?
+                       IP_RO,            // Make this read-only
+                       0,                // With no timeout
+                       IPS_IDLE);        // and an initial state of idle
+    ...
+}
+
+bool MyCustomDriver::updateProperties()
+{
+    INDI::DefaultDevice::updateProperties();
+
+    if (isConnected())
+    {
+        ...
+        defineNumber(&SayCountNP);
+    }
+    else
+    {
+        ...
+        deleteProperty(SayCountNP.name);
+    }
+
+    return true;
+}
+```
+
+Now we need to update the count every time the user clicks one of the "Say..."
+switches.
+
+We know from above that our driver's `ISNewSwitch` method is called when the user
+activates a switch, so let's add some code there.
+
+```cpp
+bool MyCustomDriver::ISNewSwitch(const char *dev, const char *name, ISState *states, char *names[],
+                                 int n)
+{
+    ...
+        if (strcmp(name, SayHelloSP.name) == 0)
+        {
+            ...
+            // Increment our "Say Count" counter.
+            // Here we update the value on the property.
+            SayCountN[0].value = int(SayCountN[0].value) + 1;
+            // And then send a message to the clients to let them know it is updated.
+            IDSetNumber(&SayCountNP, nullptr);
+            ...
+        }
+    ...
+}
+```
+
+We are updating the value of the first VALUE on our PROPERTY, then sending the client
+a message showing it was updated, so the client can update the UI.
+
+All of the `IDSet*` functions are used to let the client know that a property was updated.
+We are telling the client that "[I]NDI [D]evice [Set] a [Number]" when we call `IDSetNumber`.
+
+See [helpful functions](05-helpful-functions.md) for more info.
 
 Okay, so now we understand properties a bit. We can use them, save, and load them.
 But most drivers will want to connect to something else, and in this hobby, that is

@@ -8,14 +8,14 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/")
 
 # find our required packages
-find_package(INDI 1.8 REQUIRED)
+find_package(INDI REQUIRED)
 find_package(Nova REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(GSL REQUIRED)
 
 # these will be used to set the version number in config.h and our driver's xml file
 set(CDRIVER_VERSION_MAJOR 1)
-set(CDRIVER_VERSION_MINOR 2)
+set(CDRIVER_VERSION_MINOR 4)
 
 # do the replacement in the config.h
 configure_file(
@@ -30,11 +30,11 @@ configure_file(
 )
 
 # set our include directories to look for header files
-include_directories( ${CMAKE_CURRENT_BINARY_DIR})
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR})
-include_directories( ${INDI_INCLUDE_DIR})
-include_directories( ${NOVA_INCLUDE_DIR})
-include_directories( ${EV_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${INDI_INCLUDE_DIR})
+include_directories(${NOVA_INCLUDE_DIR})
+include_directories(${EV_INCLUDE_DIR})
 
 include(CMakeCommon)
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <libindi/defaultdevice.h>
+#include "libindi/defaultdevice.h"
 
 namespace Connection
 {
@@ -45,6 +45,9 @@ private:
 
     IText WhatToSayT[1]{};
     ITextVectorProperty WhatToSayTP;
+
+    INumber SayCountN[1]{};
+    INumberVectorProperty SayCountNP;
 
 private: // serial connection
     bool Handshake();

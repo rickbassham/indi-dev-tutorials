@@ -10,6 +10,7 @@
 * [Driver Interface](06-driver-interface.md)
 * [Guider](07-guider.md)
 * [Focuser](08-focuser.md)
+* [Coming From ASCOM](09-coming-from-ascom.md)
 
 ## Project Setup
 
@@ -63,7 +64,7 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/")
 
 # find our required packages
-find_package(INDI 1.8 REQUIRED)
+find_package(INDI REQUIRED)
 find_package(Nova REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(GSL REQUIRED)
@@ -139,13 +140,13 @@ be named to match your executable name.
 
 `driver -> name` is a friendly name for your driver.
 
-The text content of the `driver` tag must match the executable for your driver.
+The text content of the `driver` tag MUST match the executable for your driver.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <driversList>
    <devGroup group="Telescopes">
-      <device label="My Custom Device" manufacturer="My Awesome Business">
+      <device label="My Custom Driver" manufacturer="My Awesome Business">
          <driver name="My Custom Driver">indi_mycustomdriver</driver>
          <version>@CDRIVER_VERSION_MAJOR@.@CDRIVER_VERSION_MINOR@</version>
       </device>

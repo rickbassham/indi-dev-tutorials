@@ -10,6 +10,7 @@
 * [Driver Interface](06-driver-interface.md)
 * [Guider](07-guider.md)
 * [Focuser](08-focuser.md)
+* [Coming From ASCOM](09-coming-from-ascom.md)
 
 ## Helpful Functions
 

@@ -95,6 +95,27 @@ bool MyCustomDriver::initProperties()
     IUFillTextVector(&WhatToSayTP, WhatToSayT, 1, getDeviceName(), "WHAT_TO_SAY", "Got something to say?", MAIN_CONTROL_TAB, IP_RW, 60, IPS_IDLE);
     // defineText(&WhatToSayTP); // we moved this to updateProperties below
 
+    // and now let's add a counter of how many times the user clicks the button
+    IUFillNumber(&SayCountN[0], // First number VALUE in the property (and the only one)
+                 "SAY_COUNT",   // name of the VALUE
+                 "Count",       // label of the VALUE
+                 "%0.f",        // format specifier to show the value to the user; this should be a format specifier for a double
+                 0,             // minimum value; used by the client to render the UI
+                 0,             // maximum value; used by the client to render the UI
+                 0,             // step value; used by the client to render the UI
+                 0);            // current value
+
+    IUFillNumberVector(&SayCountNP,      // reference to the number PROPERTY
+                       SayCountN,        // Array of number values
+                       1,                // count of number values in the array
+                       getDeviceName(),  // device name
+                       "SAY_COUNT",      // PROPERTY name
+                       "Say Count",      // PROPERTY label
+                       MAIN_CONTROL_TAB, // What tab should we be on?
+                       IP_RO,            // Make this read-only
+                       0,                // With no timeout
+                       IPS_IDLE);        // and an initial state of idle
+
     addAuxControls();
 
     serialConnection = new Connection::Serial(this);
@@ -121,12 +142,14 @@ bool MyCustomDriver::updateProperties()
         // Add the properties to the driver when we connect.
         defineSwitch(&SayHelloSP);
         defineText(&WhatToSayTP);
+        defineNumber(&SayCountNP);
     }
     else
     {
         // And remove them when we disconnect.
         deleteProperty(SayHelloSP.name);
         deleteProperty(WhatToSayTP.name);
+        deleteProperty(SayCountNP.name);
     }
 
     return true;
@@ -165,6 +188,12 @@ bool MyCustomDriver::ISNewSwitch(const char *dev, const char *name, ISState *sta
                 LOG_INFO(WhatToSayT[0].text);
                 break;
             }
+
+            // Increment our "Say Count" counter.
+            // Here we update the value on the property.
+            SayCountN[0].value = int(SayCountN[0].value) + 1;
+            // And then send a message to the clients to let them know it is updated.
+            IDSetNumber(&SayCountNP, nullptr);
 
             // Turn all switches back off.
             IUResetSwitch(&SayHelloSP);

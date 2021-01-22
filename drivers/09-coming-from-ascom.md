@@ -405,3 +405,41 @@ set the driver you want to debug FIRST in the list.
 Now that we are configured, we should be able to just press F5 and start debugging.
 
 You can set breakpoints now!
+
+### Driver Communication
+
+In INDI, all communication between clients and drivers is done through XML messages.
+The benefit is that we can run our drivers separately from the clients, even on
+different machines. The downside is that we can't just set the value of a property
+and expect a client to see it. We need to tell the client about the new value.
+
+When a client first connects, it sends an XML message to get all properties from
+all drivers. This is the appropriately named `getProperties` message. The base
+classes for drivers (and the indiserver itself) will handle translating that
+XML message into a call to a driver's `ISGetProperties` method. In this method,
+we would "define" our properties to the client, by calling `define*` methods.
+There is one for each type of property, `defineText`, `defineNumber`, `defineSwitch`,
+`defineBLOB`, `defineLight`. These methods do more than just send a message to the
+client, they also register the property with the base class. If you really wanted
+to handle everything manually, you could just call `IDDefText`, etc to just send
+the `defineText` message to the client, but this is not recommended.
+
+If you have properties that you only want defined once you are connected (or disconnected)
+you can instead call `define*` in the `updateProperties` method. The base class
+will call this method when the connection state changes.
+
+When a client wants to make a change to a property, it sends a `new*` message
+(`newText`, `newLignt`, `newSwitch`, etc.) which will in turn cause the `ISNew*`
+methods to be invoked. These can come at any time from the client. It's up to the
+driver to determine if the `new*` message is for this device, and if we can
+handle the property change. We do this by inspecting the `dev` and `name` parameters.
+`dev` should match our device name, and `name` should match the property name.
+
+When a driver wants to update a property value and inform the clients about it,
+it would first update the value directly on the in memory property, then send
+a `set*` message to the client. This is done by calling `IDSetSwitch`, `IDSetText`,
+etc.
+
+If a method starts with `IS` it is meant to be called by the [I]NDI [S]erver and
+handled by the driver. If it starts with `ID` it is meant to be called by the
+[I]NDI [D]river and handled by the server or client.

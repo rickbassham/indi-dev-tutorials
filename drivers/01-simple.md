@@ -1,20 +1,9 @@
-# INDI Driver Development
-
-* [Full Example](https://github.com/rickbassham/indi-dev-tutorials/tree/main/drivers/indi_mycustomdriver)
-* [Project Setup](00-project-setup.md)
-* [Simple Driver](01-simple.md)
-* [Properties](02-properties.md)
-* [Serial Connection](03-serialconnection.md)
-* [Driver Loop](04-loops.md)
-* [Helpful Functions](05-helpful-functions.md)
-* [Driver Interface](06-driver-interface.md)
-* [Guider](07-guider.md)
-* [Focuser](08-focuser.md)
-* [Coming From ASCOM](09-coming-from-ascom.md)
+---
+sort: 2
+---
+## A Simple Driver
 
 This tutorial assumes you have setup your project structure to match [project-setup](00-project-setup.md).
-
-## A Simple Driver
 
 Here is an example of a very simple driver. It doesn't do anything at all, but shows the bare minimum
 that must be written to get a driver to run.

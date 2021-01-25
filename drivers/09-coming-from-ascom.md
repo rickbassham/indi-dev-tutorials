@@ -102,11 +102,22 @@ Some things to keep in mind coming from ASCOM:
 
 ### CMakeLists.txt / .sln,.csproj
 
+CMake is kinda like the command line `msbuild` (not really, it's more like just
+a part of `msbuild`). CMake will be used to build our project, but it also does
+more. It configures our project as well. What does that mean? Well, when doing
+C++ development, we need to know where to find any libraries we want to link
+against, and their header files. CMake gives us a pretty standardized way of
+finding them. It also lets us define some variables that can be replaced in
+files (things like version numbers), which will happen when we configure our
+project.
+
 The `CMakeLists.txt` file is much like your `.sln` and `.csproj` files in .Net
 development. The difference is that you don't have a GUI to configure them,
 so you need a little more understanding of what's going on.
 
 The first line defines the name of the project, and the languages we are using.
+
+https://cmake.org/cmake/help/latest/command/project.html
 
 ```cmake
 project(indi-mycustomdriver C CXX)
@@ -114,6 +125,8 @@ project(indi-mycustomdriver C CXX)
 
 And we tell cmake to setup linux standard folders. This will set some variables
 we can use in our `CMakeLists.txt` file later.
+
+https://cmake.org/cmake/help/latest/command/include.html
 
 ```cmake
 include(GNUInstallDirs)
@@ -128,11 +141,15 @@ libindi and libnova.
 
 To tell cmake about these `Find*.cmake` files, we need to include them.
 
+https://cmake.org/cmake/help/latest/variable/CMAKE_MODULE_PATH.html
+
 ```cmake
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/")
 ```
 
 Then we tell cmake to find the packages we need:
+
+https://cmake.org/cmake/help/latest/command/find_package.html
 
 ```cmake
 find_package(INDI REQUIRED)
@@ -143,12 +160,16 @@ If this is successful when we "configure" our project, it will set the
 
 Next we'll set some variables in cmake to use in our `config.h` and `xml` files:
 
+https://cmake.org/cmake/help/latest/command/set.html
+
 ```cmake
 set(CDRIVER_VERSION_MAJOR 1)
 set(CDRIVER_VERSION_MINOR 2)
 ```
 
 Now we tell cmake to do the replacements in those files:
+
+https://cmake.org/cmake/help/latest/command/configure_file.html
 
 ```cmake
 # do the replacement in the config.h
@@ -172,6 +193,8 @@ C++ header files.
 
 Now we can tell cmake how to build our executable:
 
+https://cmake.org/cmake/help/latest/command/add_executable.html
+
 ```cmake
 add_executable(
     indi_mycustomdriver
@@ -185,6 +208,8 @@ in this case, just the one.
 And tell cmake to link our executable to the actual shared libraries it found
 earlier (this is much like adding a "Reference" in .Net).
 
+https://cmake.org/cmake/help/latest/command/target_link_libraries.html
+
 ```cmake
 target_link_libraries(
     indi_mycustomdriver
@@ -195,6 +220,8 @@ target_link_libraries(
 ```
 
 Finally, we need to tell cmake where to install our application.
+
+https://cmake.org/cmake/help/latest/command/install.html
 
 ```cmake
 install(TARGETS indi_mycustomdriver RUNTIME DESTINATION bin)
@@ -417,15 +444,14 @@ When a client first connects, it sends an XML message to get all properties from
 all drivers. This is the appropriately named `getProperties` message. The base
 classes for drivers (and the indiserver itself) will handle translating that
 XML message into a call to a driver's `ISGetProperties` method. In this method,
-we would "define" our properties to the client, by calling `define*` methods.
-There is one for each type of property, `defineText`, `defineNumber`, `defineSwitch`,
-`defineBLOB`, `defineLight`. These methods do more than just send a message to the
+we would "define" our properties to the client, by calling `defineProperty` method.
+This method does more than just send a message to the
 client, they also register the property with the base class. If you really wanted
 to handle everything manually, you could just call `IDDefText`, etc to just send
 the `defineText` message to the client, but this is not recommended.
 
 If you have properties that you only want defined once you are connected (or disconnected)
-you can instead call `define*` in the `updateProperties` method. The base class
+you can instead call `defineProperty` in the `updateProperties` method. The base class
 will call this method when the connection state changes.
 
 When a client wants to make a change to a property, it sends a `new*` message

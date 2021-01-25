@@ -198,11 +198,11 @@ bool MyCustomDriver::initProperties()
 
     // now we register the property with the DefaultDevice
     // without this, the property won't show up on the control panel
-    // NOTE: you don't have to call defineSwitch here. You can call it at
+    // NOTE: you don't have to call defineProperty here. You can call it at
     // any time. Maybe you don't want it to show until you are connected, or
     // until the user does something else? Maybe you want to connect, query your
     // device, then call this. It's up to you.
-    defineSwitch(&SayHelloSP);
+    defineProperty(&SayHelloSP);
 
     return true;
 }
@@ -269,7 +269,7 @@ bool MyCustomDriver::initProperties()
 
     IUFillText(&WhatToSayT[0], "WHAT_TO_SAY", "What to say?", "Hello, world!");
     IUFillTextVector(&WhatToSayTP, WhatToSayT, 1, getDeviceName(), "WHAT_TO_SAY", "Got something to say?", MAIN_CONTROL_TAB, IP_RW, 60, IPS_IDLE);
-    defineText(&WhatToSayTP);
+    defineProperty(&WhatToSayTP);
 
     return true;
 }
@@ -470,7 +470,7 @@ bool MyCustomDriver::updateProperties()
     if (isConnected())
     {
         ...
-        defineNumber(&SayCountNP);
+        defineProperty(&SayCountNP);
     }
     else
     {

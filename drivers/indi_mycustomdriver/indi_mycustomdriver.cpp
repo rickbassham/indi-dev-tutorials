@@ -89,11 +89,11 @@ bool MyCustomDriver::initProperties()
     // now we register the property with the DefaultDevice
     // without this, the property won't show up on the control panel
     // but let's do that in updateProperties when we are connected now
-    // defineSwitch(&SayHelloSP);
+    // defineProperty(&SayHelloSP);
 
     IUFillText(&WhatToSayT[0], "WHAT_TO_SAY", "What to say?", "Hello, world!");
     IUFillTextVector(&WhatToSayTP, WhatToSayT, 1, getDeviceName(), "WHAT_TO_SAY", "Got something to say?", MAIN_CONTROL_TAB, IP_RW, 60, IPS_IDLE);
-    // defineText(&WhatToSayTP); // we moved this to updateProperties below
+    // defineProperty(&WhatToSayTP); // we moved this to updateProperties below
 
     // and now let's add a counter of how many times the user clicks the button
     IUFillNumber(&SayCountN[0], // First number VALUE in the property (and the only one)
@@ -140,9 +140,9 @@ bool MyCustomDriver::updateProperties()
     if (isConnected())
     {
         // Add the properties to the driver when we connect.
-        defineSwitch(&SayHelloSP);
-        defineText(&WhatToSayTP);
-        defineNumber(&SayCountNP);
+        defineProperty(&SayHelloSP);
+        defineProperty(&WhatToSayTP);
+        defineProperty(&SayCountNP);
     }
     else
     {
@@ -312,5 +312,5 @@ void MyCustomDriver::TimerHit()
 
     // If you don't call SetTimer, we'll never get called again, until we disconnect
     // and reconnect.
-    SetTimer(POLLMS);
+    SetTimer(getCurrentPollingPeriod());
 }

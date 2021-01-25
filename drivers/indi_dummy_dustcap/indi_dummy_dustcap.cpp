@@ -89,7 +89,7 @@ bool DummyDustcap::updateProperties()
     if (isConnected())
     {
         // The DustCapInterface doesn't define this for us, so we need to do it.
-        defineSwitch(&ParkCapSP);
+        defineProperty(&ParkCapSP);
 
         // TODO: Call define* for any custom properties only visible when connected.
     }

@@ -132,8 +132,8 @@ bool MyCustomDriver::updateProperties()
 
     if (isConnected())
     {
-        defineNumber(&GuideNSNP);
-        defineNumber(&GuideWENP);
+        defineProperty(&GuideNSNP);
+        defineProperty(&GuideWENP);
     }
     else
     {

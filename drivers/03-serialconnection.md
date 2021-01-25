@@ -131,9 +131,9 @@ bool MyCustomDriver::sendCommand(const char *cmd)
 If you have properties that you want defined only when you are connected, you'll
 need to override another method, `updateProperties`.
 
-We'll move our `define*` calls out of `initProperties` and into here.
+We'll move our `defineProperty` calls out of `initProperties` and into here.
 
-Remember, you can call `define*` any time, not just in `initProperties` or
+Remember, you can call `defineProperty` any time, not just in `initProperties` or
 `updateProperties`. You could query the capabilities of your device first,
 or call it in response to user interaction.
 
@@ -145,8 +145,8 @@ bool MyCustomDriver::updateProperties()
     if (isConnected())
     {
         // Add the properties to the driver when we connect.
-        defineSwitch(&SayHelloSP);
-        defineText(&WhatToSayTP);
+        defineProperty(&SayHelloSP);
+        defineProperty(&WhatToSayTP);
     }
     else
     {

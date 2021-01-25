@@ -1,1 +1,9 @@
 remote_theme: rundocs/jekyll-rtd-theme
+exclude:
+  - drivers/indi_dummy_dome
+  - drivers/indi_dummy_dustcap
+  - drivers/indi_dummy_filterwheel
+  - drivers/indi_dummy_focuser
+  - drivers/indi_dummy_gps
+  - drivers/indi_dummy_lightbox
+  - drivers/indi_mycustomdriver

@@ -127,8 +127,61 @@ Example XML:
 
 A device sends this message to define a new number vector property.
 
+This message has the following attributes:
+
+| Name        | Required | Notes                                                         |
+| ----------- | -------- | ------------------------------------------------------------- |
+| `device`    | Y        | name of the device                                            |
+| `name`      | Y        | name of the property                                          |
+| `label`     | N        | friendly name of the property                                 |
+| `group`     | N        | property group membership (tab in the UI)                     |
+| `state`     | Y        | current state of the property (one of `propertyState` values) |
+| `perm`      | Y        | property permissions (one of the `propertyPerm` values)       |
+| `timeout`   | N        | delay before the client assumes an update went wrong          |
+| `timestamp` | N        | moment the data was valid                                     |
+| `message`   | N        | commentary to send                                            |
+
+And contains one or more `defNumber` elements, which have the following attributes:
+
+| Name     | Required | Notes                                                    |
+| -------- | -------- | -------------------------------------------------------- |
+| `name`   | Y        | name of the value                                        |
+| `label`  | N        | friendly name of the value                               |
+| `format` | Y        | printf style format; must be suitable for a double value |
+| `min`    | Y        | minimum value                                            |
+| `max`    | Y        | maximum value                                            |
+| `step`   | Y        | increment value; ignored if 0                            |
+
+The values for `format` can be any C printf specifier that is valid for a double.
+See [printf](http://www.cplusplus.com/reference/cstdio/printf/) for more info.
+In addition to the normal double formats, INDI also supports formatting a number
+as sexagesimal format, using the `%m` specifier. You can use this specifier like
+so: `%[w].[f]m` where:
+
+* [w] is the total field width
+* [f] is the width of the fraction
+  * valid values for `f` are
+    * 9 -> ":mm:ss.ss"
+    * 8 -> ":mm:ss.s"
+    * 6 -> ":mm:ss"
+    * 5 -> ":mm.m"
+    * 3 -> ":mm"
+
+So, if you want to get a formatted number like `"-123:45"` use `"%7.3m"` or
+`"  0:01:02"` use `"%9.6m"`.
+
 The C++ function that sends this message in `libindi` is `IDDefNumber`, but it is
 recommended to use the `defineProperty` method that wraps it.
+
+Example XML:
+
+```xml
+<defNumberVector device="Telescope Simulator" name="TELESCOPE_TIMED_GUIDE_NS"
+    label="Guide N/S" group="Guider" state="Idle" perm="rw" timeout="60">
+    <defText name="TIMED_GUIDE_N" label="North (ms)" format="%.f" min="0" max="60000" step="100" />
+    <defText name="TIMED_GUIDE_S" label="South (ms)" format="%.f" min="0" max="60000" step="100" />
+</defTextVector>
+```
 
 #### `defSwitchVector`
 

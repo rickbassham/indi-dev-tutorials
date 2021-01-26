@@ -178,31 +178,122 @@ Example XML:
 ```xml
 <defNumberVector device="Telescope Simulator" name="TELESCOPE_TIMED_GUIDE_NS"
     label="Guide N/S" group="Guider" state="Idle" perm="rw" timeout="60">
-    <defText name="TIMED_GUIDE_N" label="North (ms)" format="%.f" min="0" max="60000" step="100" />
-    <defText name="TIMED_GUIDE_S" label="South (ms)" format="%.f" min="0" max="60000" step="100" />
-</defTextVector>
+    <defNumber name="TIMED_GUIDE_N" label="North (ms)" format="%.f" min="0" max="60000" step="100" />
+    <defNumber name="TIMED_GUIDE_S" label="South (ms)" format="%.f" min="0" max="60000" step="100" />
+</defNumberVector>
 ```
 
 #### `defSwitchVector`
 
 A device sends this message to define a new switch vector property.
 
+This message has the following attributes:
+
+| Name        | Required | Notes                                                         |
+| ----------- | -------- | ------------------------------------------------------------- |
+| `device`    | Y        | name of the device                                            |
+| `name`      | Y        | name of the property                                          |
+| `label`     | N        | friendly name of the property                                 |
+| `group`     | N        | property group membership (tab in the UI)                     |
+| `state`     | Y        | current state of the property (one of `propertyState` values) |
+| `perm`      | Y        | property permissions (one of the `propertyPerm` values)       |
+| `rule`      | Y        | UI hint (one of the `switchRule` values)                      |
+| `timeout`   | N        | delay before the client assumes an update went wrong          |
+| `timestamp` | N        | moment the data was valid                                     |
+| `message`   | N        | commentary to send                                            |
+
+And contains one or more `defSwitch` elements, which have the following attributes:
+
+| Name    | Required | Notes                      |
+| ------- | -------- | -------------------------- |
+| `name`  | Y        | name of the value          |
+| `label` | N        | friendly name of the value |
+
 The C++ function that sends this message in `libindi` is `IDDefSwitch`, but it is
 recommended to use the `defineProperty` method that wraps it.
+
+Example XML:
+
+```xml
+<defSwitchVector device="Telescope Simulator" name="TELESCOPE_PARK"
+    label="Parking" group="Main" state="Idle" perm="rw" timeout="60" rule="OneOfMany">
+    <defSwitch name="PARK" label="Park(ed)" />
+    <defSwitch name="UNPARK" label="UnPark(ed)" />
+</defSwitchVector>
+```
 
 #### `defLightVector`
 
 A device sends this message to define a new light vector property.
 
+This message has the following attributes:
+
+| Name        | Required | Notes                                                         |
+| ----------- | -------- | ------------------------------------------------------------- |
+| `device`    | Y        | name of the device                                            |
+| `name`      | Y        | name of the property                                          |
+| `label`     | N        | friendly name of the property                                 |
+| `group`     | N        | property group membership (tab in the UI)                     |
+| `state`     | Y        | current state of the property (one of `propertyState` values) |
+| `timestamp` | N        | moment the data was valid                                     |
+| `message`   | N        | commentary to send                                            |
+
+And contains one or more `defLight` elements, which have the following attributes:
+
+| Name    | Required | Notes                      |
+| ------- | -------- | -------------------------- |
+| `name`  | Y        | name of the value          |
+| `label` | N        | friendly name of the value |
+
 The C++ function that sends this message in `libindi` is `IDDefLight`, but it is
 recommended to use the `defineProperty` method that wraps it.
+
+Example XML:
+
+```xml
+<defLightVector device="Weather Simulator" name="WEATHER_STATUS"
+    label="Status" group="Main" state="Idle">
+    <defLight name="WEATHER_FORECAST" label="Weather" />
+    <defLight name="WEATHER_TEMPERATURE" label="Temperature (C)" />
+</defLightVector>
+```
 
 #### `defBLOBVector`
 
 A device sends this message to define a new BLOB vector property.
 
+This message has the following attributes:
+
+| Name        | Required | Notes                                                         |
+| ----------- | -------- | ------------------------------------------------------------- |
+| `device`    | Y        | name of the device                                            |
+| `name`      | Y        | name of the property                                          |
+| `label`     | N        | friendly name of the property                                 |
+| `group`     | N        | property group membership (tab in the UI)                     |
+| `state`     | Y        | current state of the property (one of `propertyState` values) |
+| `perm`      | Y        | property permissions (one of the `propertyPerm` values)       |
+| `timeout`   | N        | delay before the client assumes an update went wrong          |
+| `timestamp` | N        | moment the data was valid                                     |
+| `message`   | N        | commentary to send                                            |
+
+And contains one or more `defBLOB` elements, which have the following attributes:
+
+| Name    | Required | Notes                      |
+| ------- | -------- | -------------------------- |
+| `name`  | Y        | name of the value          |
+| `label` | N        | friendly name of the value |
+
 The C++ function that sends this message in `libindi` is `IDDefBLOB`, but it is
 recommended to use the `defineProperty` method that wraps it.
+
+Example XML:
+
+```xml
+<defBLOBVector device="CCD Simulator" name="CCD1"
+    label="Image Data" group="Main" state="Idle" perm="ro" timeout="60">
+    <defBLOB name="CCD1" label="Image" />
+</defBLOBVector>
+```
 
 #### `setTextVector`
 

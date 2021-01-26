@@ -39,11 +39,11 @@ Here are some custom types used by the INDI Protocol.
 
 ### `propertyPerm`
 
-| Name | XML Value | C++ Value | Notes |
-| ---- | --------- | --------- | ----- |
-| ro   | `ro`      | `IP_RO`   |       |
-| wo   | `wo`      | `IP_WO`   |       |
-| rw   | `rw`      | `IP_RW`   |       |
+| Name | XML Value | C++ Value | Notes                                                                              |
+| ---- | --------- | --------- | ---------------------------------------------------------------------------------- |
+| ro   | `ro`      | `IP_RO`   | only the driver can update the value of this property, a client cannot update it   |
+| wo   | `wo`      | `IP_WO`   | the driver will not update the value of this property, only a client can update it |
+| rw   | `rw`      | `IP_RW`   | either a client or the driver can update the value of this property                |
 
 ### `BLOBenable`
 
